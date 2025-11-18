@@ -1,0 +1,30 @@
+# --- Build Results (Сміття після компіляції) ---
+bin/
+obj/
+
+# --- NuGet Packages (Залежності завантажуються автоматично) ---
+/packages/
+*.nupkg
+
+# --- Rider / JetBrains (Налаштування IDE) ---
+.idea/
+*.sln.iml
+*.csproj.user
+riderModule.iml
+/_ReSharper.Caches/
+
+# --- Visual Studio (Якщо відкриєш проєкт через VS) ---
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# --- Configuration & Secrets (Безпека) ---
+# Ігноруємо налаштування середовища розробки
+appsettings.Development.json
+
+# --- OS Generated Files (Системне сміття) ---
+.DS_Store
+Thumbs.db
+Desktop.ini
