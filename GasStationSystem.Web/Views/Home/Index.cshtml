@@ -12,20 +12,22 @@
 <div class="row mb-4">
     <div class="col-12">
         <h3>⛽ Fuel</h3>
-        <hr />
+        <hr/>
     </div>
-    @foreach (var item in Model.Where(p => p.Type == GasStationSystem.Web.Models.ProductType.Fuel))
+    @foreach (var item in Model.Where(p => p.Type == ProductType.Fuel))
     {
         <div class="col-md-3 mb-4">
             <div class="card h-100 shadow-sm border-0">
-                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 200px; object-fit: cover;">
+                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name"
+                     style="height: 200px; object-fit: cover;">
                 <div class="card-body">
                     <h5 class="card-title">@item.Name</h5>
                     <p class="card-text text-muted small">@item.Description</p>
-                    <h4 class="text-primary fw-bold">@item.Price.ToString("C") <span class="fs-6 text-muted">/ L</span></h4>
+                    <h4 class="text-primary fw-bold">@item.Price.ToString("C") <span class="fs-6 text-muted">/ L</span>
+                    </h4>
                 </div>
                 <div class="card-footer bg-white border-top-0">
-                    <button onclick="addToCart('@item.Name')" class="btn btn-outline-primary w-100">
+                    <button onclick="addToCart(@item.Id, '@item.Name')" class="btn btn-outline-primary w-100">
                         <i class="fa-solid fa-gas-pump"></i> Choose
                     </button>
                 </div>
@@ -37,20 +39,21 @@
 <div class="row">
     <div class="col-12">
         <h3>☕ Cafe & Food</h3>
-        <hr />
+        <hr/>
     </div>
-    @foreach (var item in Model.Where(p => p.Type == GasStationSystem.Web.Models.ProductType.Food))
+    @foreach (var item in Model.Where(p => p.Type == ProductType.Food))
     {
         <div class="col-md-3 mb-4">
             <div class="card h-100 shadow-sm border-0">
-                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 200px; object-fit: cover;">
+                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name"
+                     style="height: 200px; object-fit: cover;">
                 <div class="card-body">
                     <h5 class="card-title">@item.Name</h5>
                     <p class="card-text text-muted small">@item.Description</p>
                     <h4 class="text-success fw-bold">@item.Price.ToString("C")</h4>
                 </div>
                 <div class="card-footer bg-white border-top-0">
-                    <button onclick="addToCart('@item.Name')" class="btn btn-outline-success w-100">
+                    <button onclick="addToCart(@item.Id, '@item.Name')" class="btn btn-outline-success w-100">
                         <i class="fa-solid fa-cart-plus"></i> Add to Order
                     </button>
                 </div>
@@ -59,14 +62,35 @@
     }
 </div>
 
-<script>
-    function addToCart(productName) {
-        Swal.fire({
-            title: 'Added!',
-            text: productName + ' has been added to your cart.',
-            icon: 'success',
-            timer: 1500,
-            showConfirmButton: false
-        });
-    }
-</script>
+@section Scripts {
+    <script>
+        function addToCart(productId, productName) {
+            $.ajax({
+                url: '@Url.Action("AddToCart", "Cart")',
+                type: 'POST',
+                data: {id: productId},
+                success: function (response) {
+                    if (response.success) {
+                        if (response.success) {
+                            let badge = $("#cartBadge");
+                            badge.text(response.count).show();
+                            badge.animate({ opacity: 0.5 }, 100).animate({ opacity: 1 }, 100);
+                        }
+                        Swal.fire({
+                            title: 'Added!',
+                            text: productName + ' added to your cart.',
+                            icon: 'success',
+                            timer: 1500,
+                            showConfirmButton: false,
+                            toast: true,
+                            position: 'top-end'
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire('Error', 'Could not add product to cart', 'error');
+                }
+            });
+        }
+    </script>
+}
