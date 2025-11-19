@@ -1,21 +1,26 @@
 using System.Diagnostics;
+using GasStationSystem.Web.Data;
 using Microsoft.AspNetCore.Mvc;
 using GasStationSystem.Web.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GasStationSystem.Web.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly ApplicationDbContext _context;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
     {
         _logger = logger;
+        _context = context;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var products = await _context.Products.ToListAsync();
+        return View(products);
     }
 
     public IActionResult Privacy()
