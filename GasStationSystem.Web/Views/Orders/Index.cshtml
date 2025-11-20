@@ -1,0 +1,88 @@
+@model IEnumerable<GasStationSystem.Web.Models.Order>
+
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4"><i class="fa-solid fa-clock-rotate-left text-primary"></i> Order History</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-secondary text-center">
+            <h4>You haven't placed any orders yet.</h4>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-2">Start Shopping</a>
+        </div>
+    }
+    else
+    {
+        <div class="accordion shadow-sm" id="ordersAccordion">
+            @foreach (var order in Model)
+            {
+                var collapseId = "collapse_" + order.Id;
+                var headingId = "heading_" + order.Id;
+
+                // Визначаємо колір бейджика статусу
+                var statusBadge = order.Status switch
+                {
+                    OrderStatus.New => "bg-primary",
+                    OrderStatus.Processing => "bg-warning text-dark",
+                    OrderStatus.Completed => "bg-success",
+                    OrderStatus.Cancelled => "bg-danger",
+                    _ => "bg-secondary"
+                };
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="@headingId">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
+                            <div class="d-flex justify-content-between w-100 me-3 align-items-center">
+                                <div>
+                                    <span class="fw-bold">Order #@order.Id</span>
+                                    <span
+                                        class="text-muted ms-2 small">@order.CreatedAt.ToLocalTime().ToString("g")</span>
+                                </div>
+                                <div>
+                                    <span class="badge @statusBadge me-3">@order.Status</span>
+                                    <span class="fw-bold text-success">@order.TotalAmount.ToString("C")</span>
+                                </div>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="@collapseId" class="accordion-collapse collapse" aria-labelledby="@headingId"
+                         data-bs-parent="#ordersAccordion">
+                        <div class="accordion-body bg-light">
+                            <table class="table table-sm table-borderless mb-0">
+                                <thead>
+                                <tr class="text-muted border-bottom">
+                                    <th>Product</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-end">Price</th>
+                                    <th class="text-end">Sum</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var item in order.OrderItems)
+                                {
+                                    <tr>
+                                        <td>
+                                            <img src="@item.Product.ImageUrl"
+                                                 style="width: 30px; height: 30px; object-fit: cover; border-radius: 4px;"
+                                                 class="me-2"
+                                                 alt="@item.Product.Name"/>
+                                            @item.Product.Name
+                                        </td>
+                                        <td class="text-center">@item.Quantity</td>
+                                        <td class="text-end">@item.PriceAtMoment.ToString("C")</td>
+                                        <td class="text-end fw-bold">@((item.PriceAtMoment * (decimal)item.Quantity).ToString("C"))</td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
