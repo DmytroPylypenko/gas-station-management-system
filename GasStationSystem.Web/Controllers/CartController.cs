@@ -1,6 +1,8 @@
+using System.Security.Claims;
 using GasStationSystem.Web.Data;
 using GasStationSystem.Web.Infrastructure.Extensions;
 using GasStationSystem.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GasStationSystem.Web.Controllers;
@@ -75,5 +77,53 @@ public class CartController : Controller
     {
         HttpContext.Session.Remove(CartSessionKey);
         return RedirectToAction("Index");
+    }
+    
+    [Authorize] 
+    public async Task<IActionResult> Checkout()
+    {
+        var cart = HttpContext.Session.GetObject<CartViewModel>(CartSessionKey);
+        
+        if (cart == null || !cart.Items.Any())
+        {
+            return RedirectToAction("Index");
+        }
+        
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        var order = new Order
+        {
+            UserId = userId,
+            CreatedAt = DateTime.UtcNow,
+            Status = OrderStatus.New,
+            TotalAmount = cart.GrandTotal,
+            OrderItems = new List<OrderItem>()
+        };
+        
+        foreach (var item in cart.Items)
+        {
+            var orderItem = new OrderItem
+            {
+                ProductId = item.ProductId,
+                Quantity = item.Quantity,
+                PriceAtMoment = item.Price 
+            };
+            order.OrderItems.Add(orderItem);
+            
+            var productDb = await _context.Products.FindAsync(item.ProductId);
+            if (productDb != null) productDb.StockQuantity -= item.Quantity;
+        }
+        
+        _context.Orders.Add(order);
+        await _context.SaveChangesAsync();
+        
+        HttpContext.Session.Remove(CartSessionKey);
+        
+        return RedirectToAction("Success", new { orderId = order.Id });
+    }
+    
+    public IActionResult Success(int orderId)
+    {
+        return View(orderId); 
     }
 }
