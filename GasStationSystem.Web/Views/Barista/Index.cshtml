@@ -1,0 +1,86 @@
+﻿@model IEnumerable<GasStationSystem.Web.Models.Order>
+
+@{
+    ViewData["Title"] = "Barista Panel";
+}
+
+<div class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fa-solid fa-mug-hot text-warning"></i> Active Orders Queue</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+            <i class="fa-solid fa-rotate"></i> Refresh
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-success text-center py-5">
+            <i class="fa-solid fa-check-circle fa-3x mb-3"></i>
+            <h4>All orders completed! Good job.</h4>
+            <p>Waiting for new customers...</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var order in Model)
+            {
+                var cardClass = order.Status == OrderStatus.New ? "border-primary" : "border-warning";
+                var bgHeader = order.Status == OrderStatus.New ? "bg-primary text-white" : "bg-warning text-dark";
+
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100 shadow-sm @cardClass">
+                        <div class="card-header @bgHeader d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">#@order.Id</span>
+                            <span class="badge bg-light text-dark">@order.CreatedAt.ToString("HH:mm")</span>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-3">
+                                @foreach (var item in order.OrderItems)
+                                {
+                                    <li class="d-flex justify-content-between border-bottom py-2">
+                                        <span>
+                                            @if(item.Product.Type == ProductType.Food) 
+                                            { <i class="fa-solid fa-utensils text-muted me-1"></i> }
+                                            else 
+                                            { <i class="fa-solid fa-gas-pump text-muted me-1"></i> }
+                                            @item.Product.Name
+                                        </span>
+                                        <span class="fw-bold">x@(item.Quantity)</span>
+                                    </li>
+                                }
+                            </ul>
+                            <div class="text-end text-muted small">
+                                Total: @order.TotalAmount.ToString("C")
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <div class="d-grid gap-2">
+                                @if (order.Status == OrderStatus.New)
+                                {
+                                    <form asp-action="UpdateStatus" method="post">
+                                        <input type="hidden" name="orderId" value="@order.Id" />
+                                        <input type="hidden" name="newStatus" value="@OrderStatus.Processing" />
+                                        <button type="submit" class="btn btn-warning w-100">
+                                            <i class="fa-solid fa-fire-burner"></i> Start Preparing
+                                        </button>
+                                    </form>
+                                }
+                                else if (order.Status == OrderStatus.Processing)
+                                {
+                                    <form asp-action="UpdateStatus" method="post">
+                                        <input type="hidden" name="orderId" value="@order.Id" />
+                                        <input type="hidden" name="newStatus" value="@OrderStatus.Completed" />
+                                        <button type="submit" class="btn btn-success w-100">
+                                            <i class="fa-solid fa-check"></i> Complete & Give
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
