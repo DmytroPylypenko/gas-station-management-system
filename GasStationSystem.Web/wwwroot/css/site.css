@@ -1,15 +1,13 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+/* === MAIN VARIABLES (Figma Tokens) === */
+:root {
+  --primary-color: #2563eb; /* Modern Blue */
+  --primary-hover: #1d4ed8;
+  --accent-color: #f59e0b;  /* Amber for gas/coffee */
+  --bg-gradient: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  --glass-bg: rgba(255, 255, 255, 0.95);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --radius-xl: 1rem;
 }
 
 html {
@@ -18,5 +16,95 @@ html {
 }
 
 body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg-gradient);
+  color: #1f2937;
   margin-bottom: 60px;
+}
+
+/* === AUTH CARD DESIGN (Login/Register) === */
+.auth-wrapper {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 450px;
+  transition: transform 0.3s ease;
+}
+
+.auth-card:hover {
+  transform: translateY(-5px);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-header h2 {
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.025em;
+}
+
+/* === MODERN INPUTS === */
+.form-floating > .form-control {
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  height: 3.5rem;
+}
+
+.form-floating > .form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+  background-color: #fff;
+}
+
+.form-floating > label {
+  color: #6b7280;
+  padding-left: 1rem;
+}
+
+/* === BUTTONS === */
+.btn-primary-custom {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  font-weight: 600;
+  width: 100%;
+  transition: all 0.2s;
+}
+
+.btn-primary-custom:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+/* === NAVBAR === */
+.navbar {
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* === FOOTER === */
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
 }

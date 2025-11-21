@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using GasStationSystem.Web.Data;
+using GasStationSystem.Web.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace GasStationSystem.Web;
 
@@ -17,12 +19,18 @@ public class Program
             options.UseSqlServer(connectionString));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-        builder.Services.AddDefaultIdentity<IdentityUser>(options => 
-                options.SignIn.RequireConfirmedAccount = true)
+        builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 4;
+            })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
         builder.Services.AddControllersWithViews();
 
+        builder.Services.AddTransient<IEmailSender, EmailSender>();
+        
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(options =>
         {
