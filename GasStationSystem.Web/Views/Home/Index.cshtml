@@ -10,7 +10,7 @@
         <p class="text-muted mb-0">Select fuel type or refreshments below.</p>
     </div>
     <div>
-        </div>
+    </div>
 </div>
 
 <div class="mb-5">
@@ -18,26 +18,29 @@
         <h3 class="h5 me-3 mb-0">Fuel & Energy</h3>
         <div class="flex-grow-1 border-bottom"></div>
     </div>
-    
+
     <div class="row g-4">
         @foreach (var item in Model.Where(p => p.Type == ProductType.Fuel))
         {
             <div class="col-md-3">
                 <div class="card h-100 border-0 shadow-sm">
                     <div class="position-relative">
-                        <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 180px; object-fit: cover;">
+                        <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name"
+                             style="height: 180px; object-fit: cover;">
                         <span class="position-absolute top-0 end-0 bg-primary text-white badge m-2">Fuel</span>
                     </div>
                     <div class="card-body">
                         <h5 class="card-title text-truncate">@item.Name</h5>
                         <p class="card-text text-muted small mb-2">@item.Description</p>
                         <div class="d-flex justify-content-between align-items-center mt-3">
-                            <span class="h5 mb-0 fw-bold">@item.Price.ToString("C") <small class="text-muted fw-normal fs-6">/ L</small></span>
+                            <span class="h5 mb-0 fw-bold">@item.Price.ToString("C") <small
+                                    class="text-muted fw-normal fs-6">/ L</small></span>
                         </div>
                     </div>
                     <div class="card-footer bg-white border-top-0 pt-0 pb-3">
-                        <button onclick="addToCart(@item.Id, '@item.Name')" class="btn btn-outline-primary w-100 btn-sm">
-                            <i class="fa-solid fa-plus me-1"></i> Add to Cart
+                        <button onclick="addToCart(@item.Id, '@item.Name', true)"
+                                class="btn btn-outline-primary w-100 btn-sm">
+                            <i class="fa-solid fa-plus me-1"></i> Add Fuel
                         </button>
                     </div>
                 </div>
@@ -57,18 +60,20 @@
         {
             <div class="col-md-3">
                 <div class="card h-100 border-0 shadow-sm">
-                     <div class="position-relative">
-                        <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 180px; object-fit: cover;">
+                    <div class="position-relative">
+                        <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name"
+                             style="height: 180px; object-fit: cover;">
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">@item.Name</h5>
                         <p class="card-text text-muted small mb-2">@item.Description</p>
                         <div class="d-flex justify-content-between align-items-center mt-3">
-                             <span class="h5 mb-0 fw-bold">@item.Price.ToString("C")</span>
+                            <span class="h5 mb-0 fw-bold">@item.Price.ToString("C")</span>
                         </div>
                     </div>
-                     <div class="card-footer bg-white border-top-0 pt-0 pb-3">
-                        <button onclick="addToCart(@item.Id, '@item.Name')" class="btn btn-outline-dark w-100 btn-sm">
+                    <div class="card-footer bg-white border-top-0 pt-0 pb-3">
+                        <button onclick="addToCart(@item.Id, '@item.Name', false)"
+                                class="btn btn-outline-dark w-100 btn-sm">
                             <i class="fa-solid fa-plus me-1"></i> Add to Order
                         </button>
                     </div>
@@ -80,33 +85,64 @@
 
 @section Scripts {
     <script>
-        function addToCart(productId, productName) {
-            $.ajax({
+        function addToCart(productId, productName, isFuel) {
+            var titleText = isFuel ? 'How many liters?' : 'Quantity?';
+            var labelText = isFuel ? `Select liters for ${productName}` : `How many ${productName} do you want?`;
+            var defaultQty = isFuel ? 10 : 1;
+
+            Swal.fire({
+                title: titleText,
+                text: labelText,
+                input: 'number',
+                inputAttributes: {
+                    min: 1,
+                    max: 100,
+                    step: 1
+                },
+                inputValue: defaultQty,
+                showCancelButton: true,
+                confirmButtonText: 'Add to Cart',
+                confirmButtonColor: '#0f172a',
+                showLoaderOnConfirm: true,
+                preConfirm: (quantity) => {
+                    return sendAddToCartRequest(productId, productName, quantity);
+                }
+            });
+        }
+
+        function sendAddToCartRequest(productId, productName, qty) {
+            return $.ajax({
                 url: '@Url.Action("AddToCart", "Cart")',
                 type: 'POST',
-                data: { id: productId },
+                data: {id: productId, quantity: qty},
                 success: function (response) {
                     if (response.success) {
                         var badge = $("#cartBadge");
                         badge.text(response.count).show();
+
+                        badge.animate({ transform: "scale(1.2)" }, 100)
+                            .animate({ transform: "scale(1)" }, 100);
                         
                         const Toast = Swal.mixin({
-                          toast: true,
-                          position: 'top-end',
-                          showConfirmButton: false,
-                          timer: 2000,
-                          timerProgressBar: true,
-                          didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                          }
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
                         })
 
                         Toast.fire({
-                          icon: 'success',
-                          title: productName + ' added'
+                            icon: 'success',
+                            title: `${qty} x ${productName} added`
                         })
                     }
+                },
+                error: function () {
+                    Swal.fire('Error', 'Could not add to cart', 'error');
                 }
             });
         }

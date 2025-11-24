@@ -41,6 +41,21 @@ public class Program
         
         var app = builder.Build();
 
+        var defaultDateCulture = "uk-UA";
+        var ci = new System.Globalization.CultureInfo(defaultDateCulture);
+
+        ci.NumberFormat.NumberDecimalSeparator = ",";
+        ci.NumberFormat.CurrencySymbol = "₴";
+
+        var localizationOptions = new RequestLocalizationOptions
+        {
+            DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(ci),
+            SupportedCultures = new List<System.Globalization.CultureInfo> { ci },
+            SupportedUICultures = new List<System.Globalization.CultureInfo> { ci }
+        };
+
+        app.UseRequestLocalization(localizationOptions);
+        
         // Seeding data
         using (var scope = app.Services.CreateScope())
         {
