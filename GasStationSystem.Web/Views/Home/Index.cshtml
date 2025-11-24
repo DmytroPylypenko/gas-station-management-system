@@ -1,65 +1,81 @@
 ﻿@model IEnumerable<GasStationSystem.Web.Models.Product>
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Catalog";
 }
 
-<div class="text-center mb-5">
-    <h1 class="display-4 fw-bold">Welcome to GasStation</h1>
-    <p class="lead">Select fuel or food to start your order</p>
+<div class="bg-white p-4 rounded shadow-sm border mb-4 d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="h3 mb-1">Product Catalog</h1>
+        <p class="text-muted mb-0">Select fuel type or refreshments below.</p>
+    </div>
+    <div>
+        </div>
 </div>
 
-<div class="row mb-4">
-    <div class="col-12">
-        <h3>⛽ Fuel</h3>
-        <hr/>
+<div class="mb-5">
+    <div class="d-flex align-items-center mb-3">
+        <h3 class="h5 me-3 mb-0">Fuel & Energy</h3>
+        <div class="flex-grow-1 border-bottom"></div>
     </div>
-    @foreach (var item in Model.Where(p => p.Type == ProductType.Fuel))
-    {
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm border-0">
-                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name"
-                     style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">@item.Name</h5>
-                    <p class="card-text text-muted small">@item.Description</p>
-                    <h4 class="text-primary fw-bold">@item.Price.ToString("C") <span class="fs-6 text-muted">/ L</span>
-                    </h4>
-                </div>
-                <div class="card-footer bg-white border-top-0">
-                    <button onclick="addToCart(@item.Id, '@item.Name')" class="btn btn-outline-primary w-100">
-                        <i class="fa-solid fa-gas-pump"></i> Choose
-                    </button>
+    
+    <div class="row g-4">
+        @foreach (var item in Model.Where(p => p.Type == ProductType.Fuel))
+        {
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="position-relative">
+                        <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 180px; object-fit: cover;">
+                        <span class="position-absolute top-0 end-0 bg-primary text-white badge m-2">Fuel</span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-truncate">@item.Name</h5>
+                        <p class="card-text text-muted small mb-2">@item.Description</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="h5 mb-0 fw-bold">@item.Price.ToString("C") <small class="text-muted fw-normal fs-6">/ L</small></span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-top-0 pt-0 pb-3">
+                        <button onclick="addToCart(@item.Id, '@item.Name')" class="btn btn-outline-primary w-100 btn-sm">
+                            <i class="fa-solid fa-plus me-1"></i> Add to Cart
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
 
-<div class="row">
-    <div class="col-12">
-        <h3>☕ Cafe & Food</h3>
-        <hr/>
+<div>
+    <div class="d-flex align-items-center mb-3">
+        <h3 class="h5 me-3 mb-0">Refreshments</h3>
+        <div class="flex-grow-1 border-bottom"></div>
     </div>
-    @foreach (var item in Model.Where(p => p.Type == ProductType.Food))
-    {
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm border-0">
-                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name"
-                     style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">@item.Name</h5>
-                    <p class="card-text text-muted small">@item.Description</p>
-                    <h4 class="text-success fw-bold">@item.Price.ToString("C")</h4>
-                </div>
-                <div class="card-footer bg-white border-top-0">
-                    <button onclick="addToCart(@item.Id, '@item.Name')" class="btn btn-outline-success w-100">
-                        <i class="fa-solid fa-cart-plus"></i> Add to Order
-                    </button>
+
+    <div class="row g-4">
+        @foreach (var item in Model.Where(p => p.Type == ProductType.Food))
+        {
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm">
+                     <div class="position-relative">
+                        <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 180px; object-fit: cover;">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="card-text text-muted small mb-2">@item.Description</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                             <span class="h5 mb-0 fw-bold">@item.Price.ToString("C")</span>
+                        </div>
+                    </div>
+                     <div class="card-footer bg-white border-top-0 pt-0 pb-3">
+                        <button onclick="addToCart(@item.Id, '@item.Name')" class="btn btn-outline-dark w-100 btn-sm">
+                            <i class="fa-solid fa-plus me-1"></i> Add to Order
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
 
 @section Scripts {
@@ -68,27 +84,29 @@
             $.ajax({
                 url: '@Url.Action("AddToCart", "Cart")',
                 type: 'POST',
-                data: {id: productId},
+                data: { id: productId },
                 success: function (response) {
                     if (response.success) {
-                        if (response.success) {
-                            let badge = $("#cartBadge");
-                            badge.text(response.count).show();
-                            badge.animate({ opacity: 0.5 }, 100).animate({ opacity: 1 }, 100);
-                        }
-                        Swal.fire({
-                            title: 'Added!',
-                            text: productName + ' added to your cart.',
-                            icon: 'success',
-                            timer: 1500,
-                            showConfirmButton: false,
-                            toast: true,
-                            position: 'top-end'
-                        });
+                        var badge = $("#cartBadge");
+                        badge.text(response.count).show();
+                        
+                        const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 2000,
+                          timerProgressBar: true,
+                          didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                          }
+                        })
+
+                        Toast.fire({
+                          icon: 'success',
+                          title: productName + ' added'
+                        })
                     }
-                },
-                error: function () {
-                    Swal.fire('Error', 'Could not add product to cart', 'error');
                 }
             });
         }
