@@ -54,7 +54,7 @@ public class CartController : Controller
 
         HttpContext.Session.SetObject(CartSessionKey, cart);
 
-        return Json(new { success = true, message = $"{product.Name} added to cart", count = cart.Items.Sum(i => i.Quantity) });
+        return Json(new { success = true, message = $"{quantity} x {product.Name} added to cart", count = cart.Items.Count });
     }
 
     
