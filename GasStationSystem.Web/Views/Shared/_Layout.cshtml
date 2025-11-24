@@ -1,4 +1,7 @@
 ﻿@using GasStationSystem.Web.Infrastructure.Extensions
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,26 +32,17 @@
             font-weight: 700;
             letter-spacing: -0.5px;
         }
-
-        .card {
-            border: none;
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
         <div class="container">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                <i class="fa-solid fa-gas-pump text-warning"></i> GasStation
+                <i class="fa-solid fa-gas-pump text-warning me-2"></i>Gas Station System
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -56,25 +50,29 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Catalog</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Orders" asp-action="Index">History</a>
+                        </li>
+                    }
                 </ul>
+
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item me-3">
-                        @{
+                         @{
                             var cart = Context.Session.GetObject<CartViewModel>("CartSession") ?? new CartViewModel();
                             var itemsCount = cart.Items.Sum(x => x.Quantity);
-                            var badgeStyle = itemsCount > 0 ? "display: flex; justify-content: center; align-items: center; width: 20px; height: 20px; top: 5px; left: 90%; font-size: 11px; padding: 0;" : "display: none;";
+                            var badgeStyle = itemsCount > 0 
+                                ? "display: flex; justify-content: center; align-items: center; width: 18px; height: 18px; top: 4px; left: 85%; font-size: 10px; padding: 0;" 
+                                : "display: none;";
                         }
-                        <a class="nav-link position-relative" asp-controller="Cart" asp-action="Index">
-                            <i class="fa-solid fa-cart-shopping fa-lg"></i>
-                
+                        <a class="nav-link position-relative" asp-controller="Cart" asp-action="Index" title="Shopping Cart">
+                            <i class="fa-solid fa-cart-shopping"></i>
                             <span id="cartBadge" 
-                                  class="position-absolute start-100 translate-middle badge rounded-pill bg-danger" 
+                                  class="position-absolute translate-middle badge rounded-pill bg-danger" 
                                   style="@badgeStyle">
                                 @itemsCount
-                                <span class="visually-hidden">items in cart</span>
                             </span>
                         </a>
                     </li>

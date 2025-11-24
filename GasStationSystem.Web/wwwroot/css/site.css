@@ -1,110 +1,123 @@
-/* === MAIN VARIABLES (Figma Tokens) === */
 :root {
-  --primary-color: #2563eb; /* Modern Blue */
-  --primary-hover: #1d4ed8;
-  --accent-color: #f59e0b;  /* Amber for gas/coffee */
-  --bg-gradient: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-  --glass-bg: rgba(255, 255, 255, 0.95);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.2);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --radius-xl: 1rem;
+  --primary-color: #0f172a;      
+  --primary-hover: #1e293b;      
+  --accent-color: #f59e0b;       
+  --success-color: #10b981;     
+  --danger-color: #ef4444;       
+
+  --bg-body: #f8fafc;          
+  --bg-card: #ffffff;
+
+  --text-main: #334155;         
+  --text-muted: #64748b;        
+
+  --border-color: #e2e8f0;     
+  --radius-md: 0.5rem;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
 }
 
 html {
+  font-size: 14px;
   position: relative;
   min-height: 100%;
 }
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: var(--bg-gradient);
-  color: #1f2937;
-  margin-bottom: 60px;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  margin-bottom: 0;
 }
 
-/* === AUTH CARD DESIGN (Login/Register) === */
-.auth-wrapper {
-  min-height: 80vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* === CARD DESIGN (Clean & Professional) === */
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s, transform 0.2s;
 }
 
-.auth-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: var(--glass-border);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
-  padding: 2.5rem;
-  width: 100%;
-  max-width: 450px;
-  transition: transform 0.3s ease;
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
-.auth-card:hover {
-  transform: translateY(-5px);
+.card-header {
+  background-color: transparent;
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 1.25rem;
+  font-weight: 600;
 }
 
-.auth-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.auth-header h2 {
-  font-weight: 700;
-  color: #111827;
-  letter-spacing: -0.025em;
-}
-
-/* === MODERN INPUTS === */
-.form-floating > .form-control {
-  border-radius: 0.75rem;
-  border: 1px solid #e5e7eb;
-  background-color: #f9fafb;
-  height: 3.5rem;
-}
-
-.form-floating > .form-control:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-  background-color: #fff;
-}
-
-.form-floating > label {
-  color: #6b7280;
-  padding-left: 1rem;
+.card-footer {
+  background-color: #f8fafc;
+  border-top: 1px solid var(--border-color);
 }
 
 /* === BUTTONS === */
-.btn-primary-custom {
+.btn-primary {
   background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 0.75rem;
-  padding: 0.75rem;
-  font-weight: 600;
-  width: 100%;
-  transition: all 0.2s;
+  border-color: var(--primary-color);
 }
 
-.btn-primary-custom:hover {
+.btn-primary:hover {
   background-color: var(--primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+  border-color: var(--primary-hover);
+}
+
+.btn-warning {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: white;
 }
 
 /* === NAVBAR === */
 .navbar {
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  background-color: var(--primary-color) !important;
+  box-shadow: var(--shadow-md);
 }
 
-/* === FOOTER === */
-.footer {
-  position: absolute;
-  bottom: 0;
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+}
+
+/* === BADGES === */
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.025em;
+}
+
+/* === TYPOGRAPHY === */
+h1, h2, h3, h4, h5 {
+  color: #0f172a;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* === AUTH WRAPPER (Login/Register) === */
+.auth-wrapper {
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.auth-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 2rem;
   width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+  max-width: 400px;
 }
