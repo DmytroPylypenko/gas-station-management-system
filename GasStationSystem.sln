@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasStationSystem.Web", "GasStationSystem.Web\GasStationSystem.Web.csproj", "{48C9BD0C-C4E0-42FA-AC93-8FCB56B6A56C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasStationSystem.Tests", "GasStationSystem.Tests\GasStationSystem.Tests.csproj", "{7B240CE4-21B3-46F7-804B-E77C243F9625}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{48C9BD0C-C4E0-42FA-AC93-8FCB56B6A56C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48C9BD0C-C4E0-42FA-AC93-8FCB56B6A56C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48C9BD0C-C4E0-42FA-AC93-8FCB56B6A56C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B240CE4-21B3-46F7-804B-E77C243F9625}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B240CE4-21B3-46F7-804B-E77C243F9625}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B240CE4-21B3-46F7-804B-E77C243F9625}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B240CE4-21B3-46F7-804B-E77C243F9625}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
