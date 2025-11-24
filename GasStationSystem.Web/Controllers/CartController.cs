@@ -24,7 +24,7 @@ public class CartController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddToCart(int id)
+    public async Task<IActionResult> AddToCart(int id, int quantity = 1)
     {
         var product = await _context.Products.FindAsync(id);
         if (product == null)
@@ -38,7 +38,7 @@ public class CartController : Controller
 
         if (cartItem != null)
         {
-            cartItem.Quantity++;
+            cartItem.Quantity += quantity;
         }
         else
         {
@@ -48,7 +48,7 @@ public class CartController : Controller
                 ProductName = product.Name,
                 Price = product.Price,
                 ImageUrl = product.ImageUrl ?? "https://placehold.co/100",
-                Quantity = 1
+                Quantity = quantity
             });
         }
 
