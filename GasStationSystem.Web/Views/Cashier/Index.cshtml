@@ -1,0 +1,57 @@
+﻿@model IEnumerable<GasStationSystem.Web.Models.Order>
+
+@{
+    ViewData["Title"] = "Sales Register";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3 text-primary"><i class="fa-solid fa-cash-register me-2"></i>Sales Register</h2>
+        <a asp-action="Inventory" class="btn btn-warning text-white">
+            <i class="fa-solid fa-boxes-stacked me-2"></i>Check Inventory
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light text-muted small text-uppercase">
+                    <tr>
+                        <th class="ps-4">Order ID</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td class="ps-4 fw-bold">#@order.Id</td>
+                            <td>@order.CreatedAt.ToLocalTime().ToString("g")</td>
+                            <td>
+                                @if(order.User != null) { <span>@order.User.Email</span> }
+                                else { <span class="text-muted">Guest</span> }
+                            </td>
+                            <td>
+                                <small class="text-muted">@order.OrderItems.Count items</small>
+                            </td>
+                            <td class="fw-bold text-success">@order.TotalAmount.ToString("C")</td>
+                            <td>
+                                <span class="badge bg-secondary">@order.Status</span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <a asp-action="Receipt" asp-route-id="@order.Id" target="_blank" class="btn btn-sm btn-outline-dark">
+                                    <i class="fa-solid fa-print me-1"></i> Print Receipt
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
