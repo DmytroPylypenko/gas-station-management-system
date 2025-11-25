@@ -21,6 +21,14 @@
                 </a>
             </li>
         }
+        @if (User.IsInRole("Cashier") || User.IsInRole("Admin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-primary fw-bold" asp-controller="Cashier" asp-action="Index">
+                    <i class="fa-solid fa-cash-register"></i> Cashier
+                </a>
+            </li>
+        }
         <li class="nav-item">
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button type="submit" class="nav-link btn btn-link">Logout</button>

@@ -1,0 +1,62 @@
+﻿@model IEnumerable<GasStationSystem.Web.Models.Product>
+
+@{
+    ViewData["Title"] = "Inventory";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3 text-primary"><i class="fa-solid fa-boxes-stacked me-2"></i>Inventory Management</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left me-2"></i>Back to Sales
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Stock Level</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        bool isLowStock = item.StockQuantity < 50;
+                        string rowClass = isLowStock ? "table-danger" : "";
+                        string textClass = isLowStock ? "text-danger fw-bold" : "text-success";
+                        string statusText = isLowStock ? "LOW STOCK" : "In Stock";
+
+                        <tr class="@rowClass">
+                            <td>
+                                <img src="@item.ImageUrl" alt="" style="width: 30px; height: 30px; object-fit: cover; border-radius: 4px;" class="me-2">
+                                @item.Name
+                            </td>
+                            <td><span class="badge bg-light text-dark border">@item.Type</span></td>
+                            <td>@item.Price.ToString("C")</td>
+                            <td class="@textClass">
+                                @item.StockQuantity 
+                                <small class="text-muted">@(item.Type == ProductType.Fuel ? "L" : "units")</small>
+                            </td>
+                            <td>
+                                @if (isLowStock)
+                                {
+                                    <span class="badge bg-danger"><i class="fa-solid fa-triangle-exclamation me-1"></i> @statusText</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">@statusText</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
