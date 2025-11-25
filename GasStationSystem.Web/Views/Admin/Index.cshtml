@@ -1,0 +1,93 @@
+﻿@model IEnumerable<GasStationSystem.Web.Models.Order>
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container py-4">
+    <h2 class="h3 mb-4 text-primary"><i class="fa-solid fa-chart-line me-2"></i>Dashboard</h2>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-uppercase opacity-75 small fw-bold">Total Revenue</h6>
+                    <h3 class="display-6 fw-bold">@ViewBag.TotalRevenue.ToString("C")</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-white h-100 border shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-uppercase text-muted small fw-bold">Total Orders</h6>
+                    <h3 class="display-6 fw-bold text-dark">@ViewBag.TotalOrders</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-white h-100 border shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-uppercase text-muted small fw-bold">Active Products</h6>
+                    <h3 class="display-6 fw-bold text-dark">@ViewBag.TotalProducts</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-uppercase opacity-75 small fw-bold">Low Stock Alert</h6>
+                    <h3 class="display-6 fw-bold">@ViewBag.LowStockCount</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="h5 fw-bold mb-0">Quick Actions</h4>
+        <div>
+            <a asp-action="Products" class="btn btn-outline-primary me-2">
+                <i class="fa-solid fa-box-open me-2"></i>Manage Products
+            </a>
+            <a asp-action="Users" class="btn btn-outline-dark">
+                <i class="fa-solid fa-users me-2"></i>Manage Users
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mt-4">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h5 class="mb-0 text-muted small text-uppercase fw-bold">Recent Orders</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="bg-light">
+                <tr>
+                    <th class="ps-4">ID</th>
+                    <th>Date</th>
+                    <th>User</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td class="ps-4 fw-bold">#@order.Id</td>
+                        <td>@order.CreatedAt.ToLocalTime().ToString("g")</td>
+                        <td>@(order.User?.UserName ?? "Guest")</td>
+                        <td class="fw-bold">@order.TotalAmount.ToString("C")</td>
+                        <td>
+                            @{
+                                var badgeClass = order.Status == OrderStatus.Completed ? "bg-success"
+                                    : order.Status == OrderStatus.Processing ? "bg-warning text-dark"
+                                    : "bg-secondary";
+                            }
+                            <span class="badge @badgeClass">@order.Status</span>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
