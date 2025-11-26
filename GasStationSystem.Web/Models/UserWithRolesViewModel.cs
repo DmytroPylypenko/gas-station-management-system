@@ -1,5 +1,8 @@
 namespace GasStationSystem.Web.Models;
 
+/// <summary>
+/// ViewModel used in the Admin Panel for managing users and their roles.
+/// </summary>
 public class UserWithRolesViewModel
 {
     public string UserId { get; set; } = string.Empty;

@@ -6,6 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GasStationSystem.Web.Controllers;
 
+/// <summary>
+/// Manages the Barista dashboard for processing food-related orders.
+/// Accessible only to users with 'Barista' or 'Admin' roles.
+/// </summary>
 [Authorize(Roles = "Barista,Admin")]
 public class BaristaController : Controller
 {
@@ -16,6 +20,11 @@ public class BaristaController : Controller
         _context = context;
     }
     
+    /// <summary>
+    /// Displays a queue of active orders that contain food items.
+    /// Filters orders by status (New or Processing) and ensures they contain at least one Food product.
+    /// </summary>
+    /// <returns>A view displaying the list of orders to be prepared.</returns>
     public async Task<IActionResult> Index()
     {
         var orders = await _context.Orders
@@ -29,6 +38,12 @@ public class BaristaController : Controller
         return View(orders);
     }
     
+    /// <summary>
+    /// Updates the status of a specific order (e.g., moving it to 'Processing' or 'Completed').
+    /// </summary>
+    /// <param name="orderId">The unique identifier of the order.</param>
+    /// <param name="newStatus">The new status to set.</param>
+    /// <returns>Redirects to the order queue.</returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateStatus(int orderId, OrderStatus newStatus)

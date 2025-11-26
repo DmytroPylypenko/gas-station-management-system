@@ -1,5 +1,9 @@
 namespace GasStationSystem.Web.Models;
 
+/// <summary>
+/// Represents a temporary item in the user's shopping cart session.
+/// Not stored in the database until checkout.
+/// </summary>
 public class CartItem
 {
     public int ProductId { get; set; }

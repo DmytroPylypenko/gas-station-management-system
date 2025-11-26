@@ -12,6 +12,10 @@ public enum OrderStatus
     Cancelled   
 }
 
+/// <summary>
+/// Represents a finalized sales transaction stored in the database.
+/// Contains information about the customer, total amount, and status.
+/// </summary>
 public class Order
 {
     [Key]

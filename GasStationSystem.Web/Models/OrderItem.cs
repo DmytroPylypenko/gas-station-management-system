@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GasStationSystem.Web.Models;
 
+/// <summary>
+/// Represents a specific line item within an Order.
+/// Links a Product to an Order and captures the price at the moment of purchase.
+/// </summary>
 public class OrderItem
 {
     [Key]

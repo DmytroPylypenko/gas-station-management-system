@@ -72,6 +72,13 @@ public class CashierController : Controller
         return View(order);
     }
     
+    /// <summary>
+    /// Manually marks an order as 'Completed'.
+    /// Useful for closing fuel-only orders that do not require kitchen preparation,
+    /// or for finalizing orders on behalf of the barista.
+    /// </summary>
+    /// <param name="id">The unique identifier of the order to complete.</param>
+    /// <returns>Redirects back to the sales register (Index).</returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CompleteOrder(int id)
