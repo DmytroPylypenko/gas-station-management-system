@@ -50,12 +50,6 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Catalog</a>
                     </li>
-                    @if (SignInManager.IsSignedIn(User))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Orders" asp-action="Index">History</a>
-                        </li>
-                    }
                 </ul>
 
                 <ul class="navbar-nav ms-auto align-items-center">
