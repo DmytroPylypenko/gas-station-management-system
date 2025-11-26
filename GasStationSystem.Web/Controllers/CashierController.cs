@@ -1,4 +1,5 @@
 using GasStationSystem.Web.Data;
+using GasStationSystem.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -69,5 +70,18 @@ public class CashierController : Controller
         if (order == null) return NotFound();
 
         return View(order);
+    }
+    
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CompleteOrder(int id)
+    {
+        var order = await _context.Orders.FindAsync(id);
+        if (order != null)
+        {
+            order.Status = OrderStatus.Completed;
+            await _context.SaveChangesAsync();
+        }
+        return RedirectToAction(nameof(Index));
     }
 }

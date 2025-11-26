@@ -48,6 +48,20 @@
                                     <i class="fa-solid fa-print me-1"></i> Print Receipt
                                 </a>
                             </td>
+                            <td class="text-end pe-4">
+                                @if (order.Status != OrderStatus.Completed && order.Status != OrderStatus.Cancelled)
+                                {
+                                    <form asp-action="CompleteOrder" asp-route-id="@order.Id" method="post" class="d-inline me-2">
+                                        <button type="submit" class="btn btn-sm btn-success" title="Complete Order">
+                                            <i class="fa-solid fa-check"></i>
+                                        </button>
+                                    </form>
+                                }
+
+                                <a asp-action="Receipt" asp-route-id="@order.Id" target="_blank" class="btn btn-sm btn-outline-dark">
+                                    <i class="fa-solid fa-print"></i>
+                                </a>
+                            </td>
                         </tr>
                     }
                 </tbody>

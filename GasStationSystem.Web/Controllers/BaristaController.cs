@@ -22,6 +22,7 @@ public class BaristaController : Controller
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.Product)
             .Where(o => o.Status == OrderStatus.New || o.Status == OrderStatus.Processing)
+            .Where(o => o.OrderItems.Any(oi => oi.Product.Type == ProductType.Food))
             .OrderBy(o => o.CreatedAt) 
             .ToListAsync();
 
