@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GasStationSystem.Web.Controllers;
 
+/// <summary>
+/// Manages shopping cart operations including adding, removing items, and processing checkout.
+/// Uses Session state to temporarily store cart data before the order is finalized.
+/// </summary>
 public class CartController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -17,12 +21,24 @@ public class CartController : Controller
         _context = context;
     }
 
+    /// <summary>
+    /// Displays the current contents of the shopping cart.
+    /// Retrieves the cart from the session or creates a new one if it doesn't exist.
+    /// </summary>
+    /// <returns>The Cart Index view with the current <see cref="CartViewModel"/>.</returns>
     public IActionResult Index()
     {
         var cart = HttpContext.Session.GetObject<CartViewModel>(CartSessionKey) ?? new CartViewModel();
         return View(cart);
     }
 
+    /// <summary>
+    /// Adds a product to the cart or updates the quantity if it already exists.
+    /// Designed to be called via AJAX.
+    /// </summary>
+    /// <param name="id">The unique identifier of the product to add.</param>
+    /// <param name="quantity">The quantity (or liters) to add. Defaults to 1.</param>
+    /// <returns>A JSON result indicating success and the updated unique item count.</returns>
     [HttpPost]
     public async Task<IActionResult> AddToCart(int id, int quantity = 1)
     {
@@ -57,7 +73,11 @@ public class CartController : Controller
         return Json(new { success = true, message = $"{quantity} x {product.Name} added to cart", count = cart.Items.Count });
     }
 
-    
+    /// <summary>
+    /// Removes a specific item from the cart based on the product ID.
+    /// </summary>
+    /// <param name="id">The ID of the product to remove.</param>
+    /// <returns>Redirects back to the Cart Index view.</returns>
     public IActionResult Remove(int id)
     {
         var cart = HttpContext.Session.GetObject<CartViewModel>(CartSessionKey);
@@ -73,12 +93,22 @@ public class CartController : Controller
         return RedirectToAction("Index");
     }
     
+    /// <summary>
+    /// Clears all items from the shopping cart by removing the session key.
+    /// </summary>
+    /// <returns>Redirects back to the Cart Index view.</returns>
     public IActionResult Clear()
     {
         HttpContext.Session.Remove(CartSessionKey);
         return RedirectToAction("Index");
     }
     
+    /// <summary>
+    /// Finalizes the order process. Converts the session cart into a database Order record.
+    /// Requires the user to be authorized (logged in).
+    /// Updates product stock levels and clears the cart upon success.
+    /// </summary>
+    /// <returns>Redirects to the Success page with the Order ID, or back to Index if cart is empty.</returns>
     [Authorize] 
     public async Task<IActionResult> Checkout()
     {
@@ -110,6 +140,7 @@ public class CartController : Controller
             };
             order.OrderItems.Add(orderItem);
             
+            // Decrease stock quantity
             var productDb = await _context.Products.FindAsync(item.ProductId);
             if (productDb != null) productDb.StockQuantity -= item.Quantity;
         }
@@ -122,6 +153,11 @@ public class CartController : Controller
         return RedirectToAction("Success", new { orderId = order.Id });
     }
     
+    /// <summary>
+    /// Displays the order confirmation page.
+    /// </summary>
+    /// <param name="orderId">The ID of the successfully created order.</param>
+    /// <returns>The Success view.</returns>
     public IActionResult Success(int orderId)
     {
         return View(orderId); 

@@ -6,6 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GasStationSystem.Web.Controllers;
 
+/// <summary>
+/// Manages the display of customer order history.
+/// Accessible only to authenticated users, allowing them to view their past transactions.
+/// </summary>
 [Authorize]
 public class OrdersController : Controller
 {
@@ -16,6 +20,12 @@ public class OrdersController : Controller
         _context = context;
     }
     
+    /// <summary>
+    /// Displays the index page containing the history of orders for the current user.
+    /// Retrieves orders from the database, including their items and product details,
+    /// sorted by creation date in descending order.
+    /// </summary>
+    /// <returns>A view populated with a list of the user's orders.</returns>
     public async Task<IActionResult> Index()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

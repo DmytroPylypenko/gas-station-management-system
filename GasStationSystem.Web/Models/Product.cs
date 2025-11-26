@@ -10,6 +10,10 @@ public enum ProductType
     Service 
 }
 
+/// <summary>
+/// Represents a product available for purchase in the system.
+/// Can be either Fuel (measured in liters) or Food (measured in units).
+/// </summary>
 public class Product
 {
     [Key]
